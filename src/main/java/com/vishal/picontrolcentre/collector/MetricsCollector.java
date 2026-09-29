@@ -29,7 +29,7 @@ public class MetricsCollector {
         MemoryStatsResponse memoryStats = metricsService.getMemoryStats();
         LoadStatsResponse loadStats = metricsService.getLoadStats();
         NetworkStatsResponse networkStats = metricsService.getNetworkStats();
-        metricsStore.saveCpuStats();
+        metricsStore.saveCpuStats(cpuStats);
     }
 
 
