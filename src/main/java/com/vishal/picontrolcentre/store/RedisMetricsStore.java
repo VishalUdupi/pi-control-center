@@ -2,14 +2,15 @@ package com.vishal.picontrolcentre.store;
 
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
 public class RedisMetricsStore {
 
-    private final RedisTemplate redisTemplate;
+    private final StringRedisTemplate redisTemplate;
 
-    public RedisMetricsStore(RedisTemplate redisTemplate){
+    public RedisMetricsStore(StringRedisTemplate redisTemplate){
         this.redisTemplate = redisTemplate;
     }
 
