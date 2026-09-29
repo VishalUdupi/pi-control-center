@@ -24,6 +24,7 @@ public class MetricsCollector {
 
     @Scheduled(fixedDelayString = "${metrics.collector.interval}")
     public void collectFastMetrics(){
+        System.out.println("Collector running");
         CpuStatsResponse cpuStats = metricsService.getCpuStats();
         MemoryStatsResponse memoryStats = metricsService.getMemoryStats();
         LoadStatsResponse loadStats = metricsService.getLoadStats();
