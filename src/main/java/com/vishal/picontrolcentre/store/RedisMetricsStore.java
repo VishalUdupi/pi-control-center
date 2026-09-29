@@ -17,7 +17,7 @@ public class RedisMetricsStore {
     public void saveCpuStats(){
         System.out.println("Store running");
         HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
-        hashOperations.put("system:cpu", "core", 4);
+        hashOperations.put("system:cpu", "core", "4");
 
 
     }
