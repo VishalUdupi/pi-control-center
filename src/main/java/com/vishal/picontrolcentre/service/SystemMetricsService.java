@@ -1,6 +1,7 @@
 package com.vishal.picontrolcentre.service;
 
 import com.vishal.picontrolcentre.client.GlancesClient;
+import com.vishal.picontrolcentre.dto.CpuStatsResponse;
 import com.vishal.picontrolcentre.dto.GlancesCPUResponse;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +14,16 @@ public class SystemMetricsService {
         this.glancesClient = glancesClient;
     }
 
-    public SystemMetricsResponse getCpuStats(GlancesCPUResponse glancesCPUResponse){
+    public CpuStatsResponse getCpuStats(){
 
+        GlancesCPUResponse response = glancesClient.getCpu();
 
+        int nCores = response.cpucore();
+        double totalUsage = response.total();
+        double userUsagePercent = response.user();
+        double iowait = response.iowait();
 
+        return new CpuStatsResponse(nCores,totalUsage,userUsagePercent,iowait);
     }
 
 }
