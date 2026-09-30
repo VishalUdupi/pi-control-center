@@ -99,20 +99,19 @@ public class RedisMetricsStore {
     public void saveFileSystemStats(List<FileSystemStatsResponse> responses){
 
         for (FileSystemStatsResponse response : responses){
+            if(response.mntPoint().equalsIgnoreCase("/etc/hostname")) {
 
-            String redisKey = "system:filesystem:" + response.deviceName();
+                String redisKey = "system:filesystem:" + response.deviceName();
 
-            HashOperations<String, String, String> fsHOps =
-                    redisTemplate.opsForHash();
+                HashOperations<String, String, String> fsHOps =
+                        redisTemplate.opsForHash();
 
-            fsHOps.put(redisKey, "device-name", response.deviceName());
-            fsHOps.put(redisKey, "fs-type", response.fsType());
-            fsHOps.put(redisKey, "mnt-point", response.mntPoint());
-            fsHOps.put(redisKey, "options", response.options());
-            fsHOps.put(redisKey, "size", String.valueOf(response.size()));
-            fsHOps.put(redisKey, "used", String.valueOf(response.used()));
-            fsHOps.put(redisKey, "free", String.valueOf(response.free()));
-            fsHOps.put(redisKey, "percent", String.valueOf(response.percent()));
+                fsHOps.put(redisKey, "device-name", response.deviceName());
+                fsHOps.put(redisKey, "size", String.valueOf(response.size()));
+                fsHOps.put(redisKey, "used", String.valueOf(response.used()));
+                fsHOps.put(redisKey, "free", String.valueOf(response.free()));
+                fsHOps.put(redisKey, "percent", String.valueOf(response.percent()));
+            }
         }
     }
 
