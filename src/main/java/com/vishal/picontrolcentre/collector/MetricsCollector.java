@@ -1,12 +1,7 @@
 package com.vishal.picontrolcentre.collector;
 
-import com.vishal.picontrolcentre.dto.CpuStatsResponse;
-import com.vishal.picontrolcentre.dto.LoadStatsResponse;
-import com.vishal.picontrolcentre.dto.MemoryStatsResponse;
-import com.vishal.picontrolcentre.dto.NetworkStatsResponse;
 import com.vishal.picontrolcentre.service.SystemMetricsService;
 import com.vishal.picontrolcentre.store.RedisMetricsStore;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -22,15 +17,27 @@ public class MetricsCollector {
         this.metricsStore = metricsStore;
     }
 
-    @Scheduled(fixedDelayString = "${metrics.collector.interval}")
+    @Scheduled(fixedDelayString = "${fast.metrics.collector.interval}")
     public void collectFastMetrics(){
         System.out.println("Collector running");
-        CpuStatsResponse cpuStats = metricsService.getCpuStats();
-        MemoryStatsResponse memoryStats = metricsService.getMemoryStats();
-        LoadStatsResponse loadStats = metricsService.getLoadStats();
-        NetworkStatsResponse networkStats = metricsService.getNetworkStats();
-        metricsStore.saveCpuStats(cpuStats);
+        metricsStore.saveCpuStats(metricsService.getCpuStats());
+        metricsStore.saveMemoryStats(metricsService.getMemoryStats());
+        metricsStore.saveLoadStats(metricsService.getLoadStats());
+        metricsStore.saveNetworkStats(metricsService.getNetworkStats());
+
     }
+
+    @Scheduled(fixedDelayString = "${sensor.metrics.collector.interval}")
+    public void collectSensorMetrics(){
+
+    }
+
+    @Scheduled(fixedDelayString = "${slow.metrics.collector.interval}")
+    public void collectSlowMetrics(){
+
+    }
+
+
 
 
 }
