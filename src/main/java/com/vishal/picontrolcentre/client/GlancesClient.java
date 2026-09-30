@@ -54,12 +54,13 @@ public class GlancesClient {
                 .body(String.class);
     }
 
-    public GlancesSensorResponse getSensors() {
+    public List<GlancesSensorResponse> getSensors() {
         return client
                 .get()
                 .uri("/api/4/sensors")
                 .retrieve()
-                .body(GlancesSensorResponse.class);
+                .body(new ParameterizedTypeReference<>() {
+                });
     }
 
     public List<GlancesFileSystemResponse> getFileSystems() {
@@ -67,7 +68,8 @@ public class GlancesClient {
                 .get()
                 .uri("/api/4/fs")
                 .retrieve()
-                .body(new ParameterizedTypeReference<List<GlancesFileSystemResponse>>() {});
+                .body(new ParameterizedTypeReference<>() {
+                });
     }
 
     public List<GlancesNetworkResponse> getNetwork() {
@@ -75,7 +77,8 @@ public class GlancesClient {
                 .get()
                 .uri("/api/4/network")
                 .retrieve()
-                .body(new ParameterizedTypeReference<List<GlancesNetworkResponse>>() {});
+                .body(new ParameterizedTypeReference<>() {
+                });
     }
 
 
