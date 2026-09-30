@@ -100,7 +100,7 @@ public class RedisMetricsStore {
 
         for (FileSystemStatsResponse response : responses){
 
-            String redisKey = "system:filesystem:" + response.key();
+            String redisKey = "system:filesystem:" + response.deviceName();
 
             HashOperations<String, String, String> fsHOps =
                     redisTemplate.opsForHash();
