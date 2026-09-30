@@ -24,7 +24,6 @@ public class MetricsCollector {
         metricsStore.saveMemoryStats(metricsService.getMemoryStats());
         metricsStore.saveLoadStats(metricsService.getLoadStats());
         metricsStore.saveNetworkStats(metricsService.getNetworkStats());
-
     }
 
     @Scheduled(fixedDelayString = "${sensor.metrics.collector.interval}")

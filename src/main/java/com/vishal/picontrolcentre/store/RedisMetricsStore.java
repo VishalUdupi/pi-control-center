@@ -17,7 +17,6 @@ public class RedisMetricsStore {
     }
 
     public void saveCpuStats(CpuStatsResponse response){
-        System.out.println("Store running");
         HashOperations<String, String, String> cpuHOps = redisTemplate.opsForHash();
         Integer cores = response.cores();
         Double iowait = response.iowait();
