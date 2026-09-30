@@ -29,12 +29,13 @@ public class MetricsCollector {
 
     @Scheduled(fixedDelayString = "${sensor.metrics.collector.interval}")
     public void collectSensorMetrics(){
-
+        metricsStore.saveSensorStats(metricsService.getSensorStats());
     }
 
     @Scheduled(fixedDelayString = "${slow.metrics.collector.interval}")
     public void collectSlowMetrics(){
-
+        metricsStore.saveFileSystemStats(metricsService.getFileSystemStats());
+        metricsStore.saveUptime(metricsService.getUptime());
     }
 
 

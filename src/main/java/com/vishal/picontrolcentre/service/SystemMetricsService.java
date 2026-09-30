@@ -73,8 +73,49 @@ public class SystemMetricsService {
         double sentRatePerSec = result.bytes_sent_rate_per_sec();
 
         return new NetworkStatsResponse(name, recvRatePerSec, sentRatePerSec);
+    }
 
+    public List<SensorStatsResponse> getSensorStats(){
 
+        List<GlancesSensorResponse> sensorResponses = glancesClient.getSensors();
+
+        return sensorResponses.stream()
+                .filter(x -> x.label().equalsIgnoreCase("cpu_thermal 0"))
+                .map(x -> new SensorStatsResponse(
+                        x.label(),
+                        x.unit(),
+                        x.value(),
+                        x.warning(),
+                        x.critical(),
+                        x.type(),
+                        x.key()
+                ))
+                .toList();
+    }
+
+    public List<FileSystemStatsResponse> getFileSystemStats(){
+
+        List<GlancesFileSystemResponse> fileSystemResponses =
+                glancesClient.getFileSystems();
+
+        return fileSystemResponses.stream()
+                .map(x -> new FileSystemStatsResponse(
+                        x.device_name(),
+                        x.fs_type(),
+                        x.mnt_point(),
+                        x.options(),
+                        x.size(),
+                        x.used(),
+                        x.free(),
+                        x.percent(),
+                        x.key()
+                ))
+                .toList();
+    }
+
+    public String getUptime(){
+
+        return glancesClient.getUptime();
     }
 
 }
