@@ -33,9 +33,14 @@ public class GlancesStatusMonitor {
         return currentStatus;
     }
 
-    @Scheduled(fixedRate = 2 * 60 * 1000)
+    @Scheduled(fixedRate = 2 * 1000)
     public void monitorGlances() {
-        checkStatus();
+        try{
+            checkStatus();
+        } catch (RuntimeException e) {
+            currentStatus = GlancesStatus.DOWN;
+        }
+
     }
 
     public void startupChecker() {
