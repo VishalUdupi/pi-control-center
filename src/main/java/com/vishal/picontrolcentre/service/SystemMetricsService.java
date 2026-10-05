@@ -84,8 +84,6 @@ public class SystemMetricsService {
                         x.label(),
                         x.unit(),
                         x.value(),
-                        x.warning(),
-                        x.critical(),
                         x.type(),
                         x.key()
                 ))
