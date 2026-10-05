@@ -1,7 +1,7 @@
 package com.vishal.picontrolcentre.controller;
 
 import com.vishal.picontrolcentre.dto.CpuStatsResponse;
-import com.vishal.picontrolcentre.service.SystemMetricsService;
+import com.vishal.picontrolcentre.store.RedisMetricsStore;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,19 +12,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/app/system")
 public class SystemController {
 
-    private final SystemMetricsService service;
+    private final RedisMetricsStore metricsStore;
 
-
-    public SystemController(SystemMetricsService service) {
-        this.service = service;
+    public SystemController(RedisMetricsStore metricsStore){
+        this.metricsStore = metricsStore;
     }
 
     @GetMapping("/cpu")
-    public ResponseEntity<CpuStatsResponse> CpuStatus(){
+    public ResponseEntity<CpuStatsResponse> getCpu(){
         return new ResponseEntity<>(
-                service.getCpuStats(),
+                metricsStore.getCpuStats(),
                 HttpStatus.OK
-                );
+        );
     }
 
 }
