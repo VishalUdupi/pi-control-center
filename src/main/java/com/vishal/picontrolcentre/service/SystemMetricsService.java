@@ -33,12 +33,11 @@ public class SystemMetricsService {
         GlancesMemoryResponse memoryResponse = glancesClient.getMemory();
 
         long total = memoryResponse.total();
-        long active = memoryResponse.active();
         long free = memoryResponse.free();
         double percent = memoryResponse.percent();
         long used = memoryResponse.used();
 
-        return new MemoryStatsResponse(total,active,free,percent,used);
+        return new MemoryStatsResponse(total,free,percent,used);
 
     }
 
@@ -101,14 +100,11 @@ public class SystemMetricsService {
         return fileSystemResponses.stream()
                 .map(x -> new FileSystemStatsResponse(
                         x.device_name(),
-                        x.fs_type(),
                         x.mnt_point(),
-                        x.options(),
                         x.size(),
                         x.used(),
                         x.free(),
-                        x.percent(),
-                        x.key()
+                        x.percent()
                 ))
                 .toList();
     }
