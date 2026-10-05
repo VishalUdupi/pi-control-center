@@ -30,6 +30,22 @@ public class RedisMetricsStore {
 
     }
 
+    public CpuStatsResponse getCpuStats(){
+        HashOperations<String, String, String> cpuHOps = redisTemplate.opsForHash();
+        String cores = cpuHOps.get("system:cpu", "cores");
+        String iowait = cpuHOps.get("system:cpu", "iowait");
+        String total = cpuHOps.get("system:cpu", "total");
+        String user = cpuHOps.get("system:cpu", "user");
+
+        return new CpuStatsResponse(
+                Integer.parseInt(cores),
+                Double.parseDouble(total),
+                Double.parseDouble(user),
+                Double.parseDouble(iowait)
+        );
+
+    }
+
     public void saveMemoryStats(MemoryStatsResponse response){
         HashOperations<String, String, String> memoryHOps = redisTemplate.opsForHash();
         Long active = response.active();
