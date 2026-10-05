@@ -48,7 +48,6 @@ public class RedisMetricsStore {
 
     public void saveMemoryStats(MemoryStatsResponse response){
         HashOperations<String, String, String> memoryHOps = redisTemplate.opsForHash();
-        Long active = response.active();
         Long free = response.free();
         Double percent = response.percent();
         Long total = response.total();
@@ -56,11 +55,27 @@ public class RedisMetricsStore {
 
         memoryHOps.put("system:memory", "total", total.toString());
         memoryHOps.put("system:memory", "used", used.toString());
-        memoryHOps.put("system:memory", "active", active.toString());
         memoryHOps.put("system:memory", "percent", percent.toString());
         memoryHOps.put("system:memory", "free", free.toString());
 
 
+    }
+
+    public MemoryStatsResponse getMemoryStats() {
+        HashOperations<String, String, String> memoryHOps =
+                redisTemplate.opsForHash();
+
+        String total = memoryHOps.get("system:memory", "total");
+        String used = memoryHOps.get("system:memory", "used");
+        String free = memoryHOps.get("system:memory", "free");
+        String percent = memoryHOps.get("system:memory", "percent");
+
+        return new MemoryStatsResponse(
+                Long.parseLong(total),
+                Long.parseLong(free),
+                Double.parseDouble(percent),
+                Long.parseLong(used)
+        );
     }
 
     public void saveLoadStats(LoadStatsResponse response){
@@ -75,6 +90,21 @@ public class RedisMetricsStore {
 
     }
 
+    public LoadStatsResponse getLoadStats() {
+        HashOperations<String, String, String> loadHOps =
+                redisTemplate.opsForHash();
+
+        String min1 = loadHOps.get("system:load", "min1");
+        String min5 = loadHOps.get("system:load", "min5");
+        String min15 = loadHOps.get("system:load", "min15");
+
+        return new LoadStatsResponse(
+                Double.parseDouble(min1),
+                Double.parseDouble(min5),
+                Double.parseDouble(min15)
+        );
+    }
+
     public void saveNetworkStats(NetworkStatsResponse response){
         HashOperations<String, String, String> networkHOps = redisTemplate.opsForHash();
         String name = response.name();
@@ -84,6 +114,26 @@ public class RedisMetricsStore {
         networkHOps.put("system:network", "interface-name", name);
         networkHOps.put("system:network","recvRatePerSec", recvRatePerSec.toString());
         networkHOps.put("system:network","sentRatePerSec", sentRatePerSec.toString());
+    }
+
+    public NetworkStatsResponse getNetworkStats() {
+        HashOperations<String, String, String> networkHOps =
+                redisTemplate.opsForHash();
+
+        String name =
+                networkHOps.get("system:network", "interface-name");
+
+        String recvRatePerSec =
+                networkHOps.get("system:network", "recvRatePerSec");
+
+        String sentRatePerSec =
+                networkHOps.get("system:network", "sentRatePerSec");
+
+        return new NetworkStatsResponse(
+                name,
+                Double.parseDouble(recvRatePerSec),
+                Double.parseDouble(sentRatePerSec)
+        );
     }
 
     public void saveSensorStats(List<SensorStatsResponse> responses){
@@ -106,11 +156,35 @@ public class RedisMetricsStore {
         sensorHOps.put("system:sensor", "label", label);
         sensorHOps.put("system:sensor", "unit", unit);
         sensorHOps.put("system:sensor", "value", value.toString());
-        //sensorHOps.put("system:sensor", "warning", warning.toString());
-        //sensorHOps.put("system:sensor", "critical", critical.toString());
+        sensorHOps.put("system:sensor", "warning", warning.toString());
+        sensorHOps.put("system:sensor", "critical", critical.toString());
         sensorHOps.put("system:sensor", "type", type);
         sensorHOps.put("system:sensor", "key", key);
     }
+
+    public SensorStatsResponse getSensorStats() {
+        HashOperations<String, String, String> sensorHOps =
+                redisTemplate.opsForHash();
+
+        String label = sensorHOps.get("system:sensor", "label");
+        String unit = sensorHOps.get("system:sensor", "unit");
+        String value = sensorHOps.get("system:sensor", "value");
+        String warning = sensorHOps.get("system:sensor", "warning");
+        String critical = sensorHOps.get("system:sensor", "critical");
+        String type = sensorHOps.get("system:sensor", "type");
+        String key = sensorHOps.get("system:sensor", "key");
+
+        return new SensorStatsResponse(
+                label,
+                unit,
+                Integer.parseInt(value),
+                Integer.parseInt(warning),
+                Integer.parseInt(critical),
+                type,
+                key
+        );
+    }
+
 
     public void saveFileSystemStats(List<FileSystemStatsResponse> responses){
 
@@ -131,10 +205,40 @@ public class RedisMetricsStore {
         }
     }
 
+    public FileSystemStatsResponse getFileSystemStats(String deviceName) {
+        String redisKey = "system:filesystem:" + deviceName;
+
+        HashOperations<String, String, String> fsHOps =
+                redisTemplate.opsForHash();
+
+        String mntPoint = "/etc/hostname";
+        String device = fsHOps.get(redisKey, "device-name");
+        String size = fsHOps.get(redisKey, "size");
+        String used = fsHOps.get(redisKey, "used");
+        String free = fsHOps.get(redisKey, "free");
+        String percent = fsHOps.get(redisKey, "percent");
+
+        return new FileSystemStatsResponse(
+                device,
+                mntPoint,
+                Long.parseLong(size),
+                Long.parseLong(used),
+                Long.parseLong(free),
+                Double.parseDouble(percent)
+        );
+    }
+
     public void saveUptime(String uptime){
         HashOperations<String, String, String> uptimeHOps = redisTemplate.opsForHash();
 
         uptimeHOps.put("system:uptime", "value", uptime);
+    }
+
+    public String getUptime() {
+        HashOperations<String, String, String> uptimeHOps =
+                redisTemplate.opsForHash();
+
+        return uptimeHOps.get("system:uptime", "value");
     }
 
 }
