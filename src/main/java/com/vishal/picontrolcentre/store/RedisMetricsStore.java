@@ -148,16 +148,12 @@ public class RedisMetricsStore {
         String label = response.label();
         String unit = response.unit();
         Integer value = response.value();
-        Integer warning = response.warning();
-        Integer critical = response.critical();
         String type = response.type();
         String key = response.key();
 
         sensorHOps.put("system:sensor", "label", label);
         sensorHOps.put("system:sensor", "unit", unit);
         sensorHOps.put("system:sensor", "value", value.toString());
-        sensorHOps.put("system:sensor", "warning", warning.toString());
-        sensorHOps.put("system:sensor", "critical", critical.toString());
         sensorHOps.put("system:sensor", "type", type);
         sensorHOps.put("system:sensor", "key", key);
     }
@@ -169,8 +165,6 @@ public class RedisMetricsStore {
         String label = sensorHOps.get("system:sensor", "label");
         String unit = sensorHOps.get("system:sensor", "unit");
         String value = sensorHOps.get("system:sensor", "value");
-        String warning = sensorHOps.get("system:sensor", "warning");
-        String critical = sensorHOps.get("system:sensor", "critical");
         String type = sensorHOps.get("system:sensor", "type");
         String key = sensorHOps.get("system:sensor", "key");
 
@@ -178,8 +172,6 @@ public class RedisMetricsStore {
                 label,
                 unit,
                 Integer.parseInt(value),
-                Integer.parseInt(warning),
-                Integer.parseInt(critical),
                 type,
                 key
         );
