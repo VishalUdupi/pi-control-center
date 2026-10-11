@@ -1,8 +1,6 @@
 package com.vishal.picontrolcentre.entity;
 
 import jakarta.persistence.*;
-
-import java.math.BigDecimal;
 import java.time.Instant;
 
 @Entity
@@ -14,9 +12,20 @@ public class CpuHistory {
     private long id;
     private Instant recordedAt;
     private int cores;
-    private BigDecimal total;
-    private BigDecimal user;
-    private BigDecimal iowait;
+    private Double total;
+    private Double user;
+    private Double iowait;
+
+    public CpuHistory(int cores, Double total, Double user, Double iowait) {
+        this.cores = cores;
+        this.total = total;
+        this.user = user;
+        this.iowait = iowait;
+    }
+
+    protected CpuHistory() {
+
+    }
 
     @PrePersist
     protected void recordedAt(){
@@ -49,27 +58,27 @@ public class CpuHistory {
         this.cores = cores;
     }
 
-    public BigDecimal getTotal() {
+    public Double getTotal() {
         return total;
     }
 
-    public void setTotal(BigDecimal total) {
+    public void setTotal(Double total) {
         this.total = total;
     }
 
-    public BigDecimal getUser() {
+    public Double getUser() {
         return user;
     }
 
-    public void setUser(BigDecimal user) {
+    public void setUser(Double user) {
         this.user = user;
     }
 
-    public BigDecimal getIowait() {
+    public Double getIowait() {
         return iowait;
     }
 
-    public void setIowait(BigDecimal iowait) {
+    public void setIowait(Double iowait) {
         this.iowait = iowait;
     }
 }
