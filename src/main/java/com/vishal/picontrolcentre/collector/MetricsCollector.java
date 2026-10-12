@@ -1,6 +1,7 @@
 package com.vishal.picontrolcentre.collector;
 
 import com.vishal.picontrolcentre.monitor.GlancesStatusMonitor;
+import com.vishal.picontrolcentre.service.PersistenceService;
 import com.vishal.picontrolcentre.service.SystemMetricsService;
 import com.vishal.picontrolcentre.status.GlancesStatus;
 import com.vishal.picontrolcentre.store.RedisMetricsStore;
@@ -16,10 +17,13 @@ public class MetricsCollector {
 
     private final GlancesStatusMonitor glancesStatusMonitor;
 
-    public MetricsCollector(SystemMetricsService metricsService, RedisMetricsStore metricsStore, GlancesStatusMonitor glancesStatusMonitor) {
+    private final PersistenceService persistenceService;
+
+    public MetricsCollector(SystemMetricsService metricsService, RedisMetricsStore metricsStore, GlancesStatusMonitor glancesStatusMonitor, PersistenceService persistenceService) {
         this.metricsService = metricsService;
         this.metricsStore = metricsStore;
         this.glancesStatusMonitor = glancesStatusMonitor;
+        this.persistenceService = persistenceService;
     }
 
     @Scheduled(fixedDelayString = "${fast.metrics.collector.interval}")
@@ -29,6 +33,7 @@ public class MetricsCollector {
             metricsStore.saveMemoryStats(metricsService.getMemoryStats());
             metricsStore.saveLoadStats(metricsService.getLoadStats());
             metricsStore.saveNetworkStats(metricsService.getNetworkStats());
+
         }
     }
 
@@ -45,6 +50,17 @@ public class MetricsCollector {
             metricsStore.saveFileSystemStats(metricsService.getFileSystemStats());
             metricsStore.saveUptime(metricsService.getUptime());
         }
+    }
+
+    @Scheduled(fixedDelayString = "${db.metrics.collector.updater.interval}")
+    public void updateMetricsToDB(){
+        if(glancesStatusMonitor.getStatus() == GlancesStatus.UP){
+            persistenceService.persistCpuStats(metricsStore.getCpuStats());
+            persistenceService.persistMemoryStats(metricsStore.getMemoryStats());
+            persistenceService.persistLoadStats(metricsStore.getLoadStats());
+        }
+
+
     }
 
 
