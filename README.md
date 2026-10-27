@@ -1,159 +1,75 @@
-Pi Control Centre
+# React + TypeScript + Vite
 
-A self-hosted system monitoring and control centre for a Raspberry Pi, built with Java, Spring Boot, Redis, PostgreSQL, Docker, and Glances.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-The project is designed as a lightweight backend for collecting system metrics from a Raspberry Pi, exposing them through REST APIs, and providing a foundation for storing both current and historical metrics.
+Currently, two official plugins are available:
 
-Overview
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-Pi Control Centre acts as a central backend for monitoring the Raspberry Pi.
+## React Compiler
 
-Instead of querying the operating system directly from the Spring Boot application, the project uses Glances as the system monitoring layer.
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-                    Raspberry Pi
-                         │
-        ┌────────────────┼────────────────┐
-        │                │                │
-     Glances          Redis           PostgreSQL
-        │                │                │
-        │          Current Metrics    Historical
-        │             / Cache          Metrics
-        │                │                │
-        └────────── Spring Boot ──────────┘
-                         │
-                    REST API
-                         │
-                    Monitoring UI
+## Expanding the ESLint configuration
 
-The Spring Boot application acts as the application layer between Glances, Redis, PostgreSQL, and eventually a frontend.
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-Goals
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
-The main goals of the project are:
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
 
-Monitor Raspberry Pi system resources.
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 
-Collect metrics from Glances through its REST API.
+```
 
-Cache/current-state metrics in Redis.
+You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
 
-Persist historical metrics in PostgreSQL.
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
-Expose monitoring data through REST APIs.
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 
-Keep the architecture modular and extensible.
-
-Run the infrastructure locally on the Raspberry Pi.
-
-Avoid dependency on external monitoring SaaS platforms.
-
-Technology Stack
-
-Component
-
-Technology
-
-Language
-
-Java
-
-Framework
-
-Spring Boot
-
-Runtime
-
-Java 21
-
-System Monitoring
-
-Glances
-
-Cache / Current Metrics
-
-Redis 8
-
-Historical Storage
-
-PostgreSQL
-
-Containerization
-
-Docker
-
-Container Orchestration
-
-Docker Compose
-
-API Communication
-
-Spring RestClient
-
-Build Tool
-
-Maven
-
-Architecture
-
-REST / layered backend
-
-Hardware / Environment
-
-The project currently runs on a:
-
-Raspberry Pi 4B
-
-ARM64 / aarch64
-
-Debian GNU/Linux 13 (Trixie)
-
-Java:
-
-OpenJDK 21
-
-Docker:
-
-Docker Engine 29.8.1
-
-Architecture
-
-The application is divided into several logical layers.
-
-                    ┌──────────────┐
-                    │   Glances    │
-                    │ System Data  │
-                    └──────┬───────┘
-                           │
-                           │ REST API
-                           ▼
-                 ┌────────────────────┐
-                 │   GlancesClient     │
-                 │ Spring RestClient   │
-                 └─────────┬──────────┘
-                           │
-                           ▼
-                 ┌────────────────────┐
-                 │ SystemMetricsService│
-                 └─────────┬──────────┘
-                           │
-                    ┌──────┴──────┐
-                    │             │
-                    ▼             ▼
-                 Redis        PostgreSQL
-                Current       Historical
-                Metrics        Metrics
-                    │
-                    ▼
-             RedisMetricsStore
-                    │
-                    ▼
-                 REST API
-
-Glances
-
-Glances is used as the system monitoring engine.
-
-It provides information about the Raspberry Pi without requiring the Spring Boot application to directly interact with Linux system files or hardware sensors.
-
-The application communicates with Glances through its API.
-
+```
