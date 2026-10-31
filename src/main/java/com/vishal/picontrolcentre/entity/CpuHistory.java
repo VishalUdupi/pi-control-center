@@ -13,6 +13,7 @@ public class CpuHistory {
     private Instant recordedAt;
     private int cores;
     private Double total;
+    @Column(name = "user_percent")
     private Double user;
     private Double iowait;
 
