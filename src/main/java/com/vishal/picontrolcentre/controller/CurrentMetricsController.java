@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/app/system")
-public class SystemController {
+@RequestMapping("/app/current/system")
+public class CurrentMetricsController {
 
     private final RedisMetricsStore metricsStore;
 
-    public SystemController(RedisMetricsStore metricsStore){
+    public CurrentMetricsController(RedisMetricsStore metricsStore){
         this.metricsStore = metricsStore;
     }
 
