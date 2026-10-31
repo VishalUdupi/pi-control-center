@@ -1,4 +1,3 @@
-```tsx
 import { useCallback, useEffect, useState } from 'react';
 import './App.css';
 import { currentApi, historyApi } from './api/metricsApi';
